@@ -1,0 +1,170 @@
+void processLine(const std::string& line) {
+        std::istringstream iss(line);
+        std::string token;
+        cout << "Entra" << endl;
+        // Leer tokens de la línea
+        while (iss >> token) {
+            if (token == "cin") {
+                char reg;
+                iss >> reg;
+                output("in " + std::to_string(registerMap[reg]));
+            } else if (token == "cout") {
+                char reg;
+                iss >> reg;
+                output("out " + std::to_string(registerMap[reg]));
+            } else if (isalpha(token[0])) {
+                char destReg, op, srcReg1, srcReg2;
+                destReg = token[0];
+                iss >> op;
+
+                if (op == '=') {
+                    iss >> srcReg1 >> op >> srcReg2;
+                    output("load " + std::to_string(registerMap[srcReg1]) + " , " + destReg);
+                    output("store " + std::to_string(destReg) + " , " + std::to_string(registerMap[srcReg2]));
+                } else if (op == '+' || op == '*') {
+                    iss >> srcReg1 >> srcReg2;
+                    std::string operation = (op == '+') ? "add" : "mul";
+                    output(operation + " " + destReg + " ," + std::to_string(registerMap[srcReg1]) + " , " + std::to_string(registerMap[srcReg2]));
+                    output("store " + std::to_string(destReg) + " , " + std::to_string(registerMap[destReg]));
+                }
+            }
+        }
+    }
+
+
+void compile(string inputFile, string outputFile){
+        std::string line;
+        std::ifstream input(inputFile);
+        std::ofstream output(outputFile);
+        while (std::getline(input, line)) {
+            std::istringstream iss(line);
+            std::string instruction;
+            iss >> instruction;
+            if (instruction == "mov") {
+                std::string registerName;
+                iss >> registerName;
+                int registerValue = registerMap[registerName[0]];
+                iss >> instruction;
+                if (instruction == "int") {
+                    int value;
+                    iss >> value;
+                    mov(registerValue, value);
+                } else {
+                    std::string registerName2;
+                    iss >> registerName2;
+                    int registerValue2 = registerMap[registerName2[0]];
+                    mov(registerValue, registerValue2);
+                }
+            } else if (instruction == "add") {
+                std::string registerName;
+                iss >> registerName;
+                int registerValue = registerMap[registerName[0]];
+                iss >> instruction;
+                if (instruction == "int") {
+                    int value;
+                    iss >> value;
+                    add(registerValue, value);
+                } else {
+                    std::string registerName2;
+                    iss >> registerName2;
+                    int registerValue2 = registerMap[registerName2[0]];
+                    add(registerValue, registerValue2);
+                }
+            } else if (instruction == "sub") {
+                std::string registerName;
+                iss >> registerName;
+                int registerValue = registerMap[registerName[0]];
+                iss >> instruction;
+                if (instruction == "int") {
+                    int value;
+                    iss >> value;
+                    sub(registerValue, value);
+                } else {
+                    std::string registerName2;
+                    iss >> registerName2;
+                    int registerValue2 = registerMap[registerName2[0]];
+                    sub(registerValue, registerValue2);
+                }
+            } else if (instruction == "mul") {
+                std::string registerName;
+                iss >> registerName;
+                int registerValue = registerMap[registerName[0]];
+                iss >> instruction;
+                if (instruction == "int") {
+                    int value;
+                    iss >> value;
+                    mul(registerValue, value);
+                } else {
+                    std::string registerName2;
+                    iss >> registerName2;
+                    int registerValue2 = registerMap[registerName2[0]];
+                    mul(registerValue, registerValue2);
+    }
+
+
+#include <iostream>
+#include <fstream>
+#include <sstream>
+#include <unordered_map>
+#include <vector>
+using namespace std;
+enum Register { A = 100, B = 101, C = 102, D = 103, E = 104, F = 105, G = 106, H = 107 };
+
+class Compiler {
+public:
+    Compiler() {
+        // Inicializar el mapa de registros
+        registerMap['a'] = A;
+        registerMap['b'] = B;
+        registerMap['c'] = C;
+        registerMap['d'] = D;
+        registerMap['e'] = E;
+        registerMap['f'] = F;
+        registerMap['g'] = G;
+        registerMap['h'] = H;
+    }
+
+    void compile(const std::string& inputFile, const std::string& outputFile) {
+        std::ifstream input(inputFile);
+        std::ofstream output(outputFile);
+        std::string line;
+        vector<string> lines;
+        while (std::getline(input, line)) {
+            lines.push_back(removerEspacios(line));
+        }
+
+        for(auto l : lines){
+            cout << l << endl;
+        }
+
+        input.close();
+        output.close();
+    }
+
+private:
+    std::unordered_map<char, int> registerMap;
+
+    void compileLines(vector<string> lines){
+
+
+    }
+
+    string removerEspacios(string line){
+        string newLine = "";
+        for(int i = 0; i < line.size(); i++){
+            if(line[i] != ' '){
+                newLine += line[i];
+            }
+        }
+        return newLine;
+    }
+};
+
+int main() {
+    Compiler compiler;
+
+    // Compilar el primer código de ejemplo
+    compiler.compile("input.txt", "output.txt");
+
+    return 0;
+}
