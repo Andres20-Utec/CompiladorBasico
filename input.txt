@@ -1,0 +1,11 @@
+while(true)   {
+    cin>>a;
+    cin>>b;
+    c=a+b;
+    d= a * b;
+    a++;
+    b--;
+    e =                       a;
+    e = 19;
+    cout  << c;
+}
